@@ -1,0 +1,238 @@
+#:kivy 1.10.1
+
+# Root widget that handles all the screens
+WindowManager:
+    HomeScreen:
+    TransactionsScreen:
+    CreditScreen:
+    DebitScreen:
+
+# HomeScreen Layout
+<HomeScreen>:
+    name: 'home'
+    FloatLayout:
+        AnchorLayout:
+            anchor_x: 'right'
+            anchor_y: 'top'
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: None, None
+                size: '150dp', '230dp'
+                spacing: '10dp'
+                padding: '10dp'
+
+                Button:
+                    text: 'Transactions'
+                    size_hint_y: None
+                    height: '35dp'
+                    on_press:
+                        app.root.current = 'transactions'
+
+                Button:
+                    text: 'Credits'
+                    size_hint_y: None
+                    height: '35dp'
+                    on_press:
+                        app.root.current = 'credit'
+
+                Button:
+                    text: 'Debits'
+                    size_hint_y: None
+                    height: '35dp'
+                    on_press:
+                        app.root.current = 'debit'
+
+                Button:
+                    text: 'Search'
+                    size_hint_y: None
+                    height: '35dp'
+                    on_press:
+                        app.root.current = 'search'
+
+        Label:
+            text: 'Money! Where has it gone?'
+            font_size: '24dp'
+            halign: 'center'
+            valign: 'middle'
+            size_hint: None, None
+            size: self.texture_size
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+<TransactionsScreen>:
+    name: 'transactions'
+    transaction_layout: transaction_layout  # Reference to the included TransactionLayout
+    TransactionLayout:
+        id: transaction_layout
+        screen: root
+
+<CreditScreen>:
+    name: 'credit'
+    transaction_layout: transaction_layout
+    TransactionLayout:
+        id: transaction_layout
+        screen: root
+
+<DebitScreen>:
+    name: 'debit'
+    transaction_layout: transaction_layout
+    TransactionLayout:
+        id: transaction_layout
+        screen: root
+
+<TransactionLayout>:
+    orientation: 'vertical'
+    spacing: 10
+
+    # Header for the transactions list
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 40
+        padding: 5
+        spacing: 10
+        canvas.before:
+            Color:
+                rgba: 0.247, 0.318, 0.709, 1  # Blue background
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "Date"
+            size_hint_x: 0.1
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+        Label:
+            text: "Receiver"
+            size_hint_x: 0.25
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+        Label:
+            text: "Description"
+            size_hint_x: 0.35
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+        Label:
+            text: "Amount"
+            size_hint_x: 0.1
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+        Label:
+            text: "Type"
+            size_hint_x: 0.1
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+        Label:
+            text: "Category"
+            size_hint_x: 0.1
+            bold: True
+            color: (1, 1, 1, 1)
+            halign: 'center'
+            valign: 'middle'
+            shorten: True
+            shorten_from: 'right'
+
+    # Scrollable area for transactions
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        BoxLayout:
+            id: transactions_box
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: 5
+            padding: 5
+
+    # Pagination controls and 'Back to Home' button on the same row
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 50
+        spacing: 5
+        padding: 10
+
+        # Pagination buttons
+        Button:
+            text: '««'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_first_page()
+
+        Button:
+            text: '«'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_previous_page()
+
+        Button:
+            id: page_1
+            text: '1'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_page(int(self.text))
+
+        Button:
+            id: page_2
+            text: '2'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_page(int(self.text))
+
+        Button:
+            id: page_3
+            text: '3'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_page(int(self.text))
+
+        Button:
+            text: '»'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_next_page()
+
+        Button:
+            text: '»»'
+            size_hint_x: None
+            width: 40
+            on_press: root.screen.go_to_last_page()
+
+        # Spacer to push 'Back to Home' button to the right
+        Widget:
+            size_hint_x: 1
+
+        # 'Back to Home' button aligned to the right
+        Button:
+            text: 'Back to Home'
+            size_hint_x: None
+            width: 150
+            on_release:
+                app.root.current = 'home'
+
+
